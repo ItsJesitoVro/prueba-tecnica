@@ -252,9 +252,9 @@ function limpiarFunciones() {
       ) AS fecha_limite
       FROM alumno a
       JOIN prestamo p ON p.id_alumno = a.id
-      JOIN libro l   ON p.id_libro   = l.id
-      WHERE a.id           = 3
-      AND p.entregado    = FALSE
+      JOIN libro l ON p.id_libro = l.id
+      WHERE a.id = 3
+      AND p.entregado = FALSE
       AND (p.fecha_prestamo
       + (l.dias_limite_prestamo * INTERVAL '1 day')
       ) < '2021-07-30'::DATE;

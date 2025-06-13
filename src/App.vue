@@ -5,6 +5,7 @@ const mostrarCadenaInvertida = ref(false)
 const mostrarArregloParesUnicos = ref(false)
 const mostrarNumerosPrimosGemelos = ref(false)
 const mostrarConjugacion = ref(false)
+const mostrarExplicacionSql = ref(false)
 const cadena = ref('')
 const resultado = ref('')
 
@@ -111,6 +112,7 @@ function limpiarFunciones() {
   mostrarArregloParesUnicos.value = false;
   mostrarNumerosPrimosGemelos.value = false;
   mostrarConjugacion.value = false;
+  mostrarExplicacionSql.value = false;
   cadena.value = '';
   resultado.value = '';
   arregloNumeros.value = '';
@@ -143,6 +145,9 @@ function limpiarFunciones() {
     </button>
     <button class="boton-funciones" @click="limpiarFunciones(); mostrarConjugacion = true">
       Composición de la Conjugación
+    </button>
+    <button class="boton-funciones" @click="limpiarFunciones(); mostrarExplicacionSql = true">
+      Biblioteca
     </button>
   </div>
 
@@ -234,6 +239,34 @@ function limpiarFunciones() {
     <p v-if="resultadoConjugacion !== null">
       Resultado: {{ resultadoConjugacion ? 'TRUE' : 'FALSE' }}
     </p>
+  </div>
+
+  <div v-if="mostrarExplicacionSql">
+    <h2>Explicacion del Query</h2>
+    <p>
+      SELECT
+      l.nombre,
+      p.fecha_prestamo,
+      (p.fecha_prestamo
+      + (l.dias_limite_prestamo * INTERVAL '1 day')
+      ) AS fecha_limite
+      FROM alumno a
+      JOIN prestamo p ON p.id_alumno = a.id
+      JOIN libro l ON p.id_libro = l.id
+      WHERE a.id = 3
+      AND p.entregado = FALSE
+      AND (p.fecha_prestamo
+      + (l.dias_limite_prestamo * INTERVAL '1 day')
+      ) < '2021-07-30'::DATE;
+    </p>
+    <div>Explicacion</div>
+    <div>
+      El select solo va a tomar el nombre de la persona que debe el libro, la fecha que se presto dicho libro y
+      finalmente se hace un calculo de la fecha limite del libre para saber que dia era el que tenia que entregarse
+      va hacer una relacion del alumno, prestamo y el libro para obtener su relacion con el alumno de ID=3 y que no
+      hayan sido entrgados, el uso de INTERVAL es para poder calcular por dias y manejar correctamente el tipo DATE
+      en postgresql.
+    </div>
   </div>
 
 </template>
